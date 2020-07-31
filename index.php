@@ -1,21 +1,27 @@
 <?php 
 
+//autoload do que meu projeto precisa
 require_once("vendor/autoload.php");
 
-$app = new \Slim\Slim();
+//namespaces - pastas necessárias (que estão dentro do vendor) p/ o projeto funcionar
+use \Slim\Slim;
+use \Hcode\Page;
+
+//trabalhar com rotas usa o Slim
+$app = new Slim();
 
 $app->config('debug', true);
 
-$app->get('/', function() {
-    
-	$sql = new Hcode\DB\Sql();
+//rota p/ o funcionamento
+$app->get('/', function(){
 
-	$results = $sql->select("SELECT * FROM tb_users");
+	$page = new Page();
 
-	echo json_encode($results);
+	$page->setTpl("index");
 
 });
 
+//executa tudo
 $app->run();
 
  ?>
