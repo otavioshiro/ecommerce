@@ -1,5 +1,7 @@
 <?php 
 
+session_start();
+
 //autoload do que meu projeto precisa
 require_once("vendor/autoload.php");
 
@@ -7,6 +9,7 @@ require_once("vendor/autoload.php");
 use \Slim\Slim;
 use \Hcode\Page;
 use \Hcode\PageAdmin;
+use \Hcode\Model\User;
 
 //trabalhar com rotas usa o Slim
 $app = new Slim();
@@ -25,9 +28,40 @@ $app->get('/', function(){
 //rota p/ o funcionamento de ADmin
 $app->get('/admin', function(){
 
+	User::verifyLogin();
+
 	$page = new PageAdmin();
 
 	$page->setTpl("index");
+
+});
+
+//rota p/ o funcionamento do Login
+$app->get('/admin/login', function(){
+
+	$page = new PageAdmin(["header"=>false,
+						   "footer"=>false
+	]);
+
+	$page->setTpl("login");
+
+});
+
+$app->post('/admin/login', function(){
+
+	User::login($_POST["login"], $_POST["password"]);
+
+	header("Location: /admin");
+	exit;
+
+});
+
+$app->get('/admin/logout', function(){
+
+	User::logout();
+
+	header("Location: /admin/login");
+	exit;
 
 });
 
