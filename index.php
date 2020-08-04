@@ -105,20 +105,26 @@ $app->get("/admin/users/:iduser", function($iduser){
 
 });
 
-$app->post("/admin/users/create", function(){
+$app->post("/admin/users/create", function () {
 
-	User::verifyLogin();
+ 	User::verifyLogin();
 
 	$user = new User();
 
-	$_POST["inadmin"] = (isset($_POST["inadmin"]))?1:0;
+ 	$_POST["inadmin"] = (isset($_POST["inadmin"])) ? 1 : 0;
 
-	$user->setData($_POST);
+ 	$_POST['despassword'] = password_hash($_POST["despassword"], PASSWORD_DEFAULT, [
+
+ 		"cost"=>12
+
+ 	]);
+
+ 	$user->setData($_POST);
 
 	$user->save();
 
 	header("Location: /admin/users");
-	exit;
+ 	exit;
 
 });
 
@@ -127,9 +133,6 @@ $app->post("/admin/users/:iduser", function($iduser){
 	User::verifyLogin();
 
 });
-
-
-
 
 
 //executa tudo
